@@ -1,0 +1,28 @@
+{
+  "name": "ilo4-psu-stats",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bgachenot/ilo4-psu-stats.git"
+  },
+  "author": "Brandon Gachenot",
+  "license": "AGPL",
+  "bugs": {
+    "url": "https://github.com/bgachenot/ilo4-psu-stats/issues"
+  },
+  "homepage": "https://github.com/bgachenot/ilo4-psu-stats#readme",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.17.1",
+    "node-cron": "^3.0.1",
+    "node-fetch": "^3.2.9",
+    "uuid": "^8.3.2"
+  }
+}
