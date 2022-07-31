@@ -21,7 +21,7 @@ async function isAuthenticated() {
         agent,
         headers,
     }
-    const response = await fetch('https://192.168.100.63/json/session_info', options);
+    const response = await fetch(`https://${process.env.ILO4_IP}/json/session_info`, options);
     const data = await response.json();
     if ('message' in data && data['message'] == 'JS_ERR_LOST_SESSION') {
         return false;
@@ -36,7 +36,7 @@ async function loginToILO() {
         method: 'POST',
         body: JSON.stringify({method: 'login', user_login: process.env.ILO4_USERNAME, password: process.env.ILO4_PASSWORD})
     }
-    const response = await fetch('https://192.168.100.63/json/login_session', options);
+    const response = await fetch(`https://${process.env.ILO4_IP}/json/login_session`, options);
     const data = await response.json();
     if (response.status !== 200) {
         console.log('Error logging in to ILO');
@@ -65,12 +65,28 @@ export async function getPowerReadings() {
         agent,
         headers,
     }
-    const response = await fetch('https://192.168.100.63/json/power_readings', options);
+    const response = await fetch(`https://${process.env.ILO4_IP}/json/power_readings`, options);
     if (response.status != 200) {
         return {status: 'failed'};
     }
     const data = await response.json();
     return {status: 'success', data: data};
+}
+
+export async function getPowerStatus() {
+    const headers = {
+        cookie: cookies,
+    };
+    const options = {
+        agent,
+        headers,
+    }
+    const response = await fetch(`https://${process.env.ILO4_IP}/json/host_power`, options);
+    if (response.status != 200) {
+        return {status: 'failed'};
+    }
+    const data = await response.json();
+    return {status: 'success', data: data};        
 }
 
 async function pressPowerButton() {
@@ -85,7 +101,7 @@ async function pressPowerButton() {
         body: JSON.stringify({method: 'press_power_button', session_key: sessionKey})
     }
     
-    const response = await fetch('https://192.168.100.63/json/host_power', options);
+    const response = await fetch(`https://${process.env.ILO4_IP}/json/host_power`, options);
 
     if (response.status == 200) {
         return {status: 'success'};
@@ -115,6 +131,14 @@ app.get('/getPowerReadings', async (req, res) => {
 
 app.get('/pressPowerButton', async (req, res) => {
     const data = await pressPowerButton();
+    if (data.status == 'success') {
+        return res.json(data);
+    }
+    return res.json(data);
+});
+
+app.get('/getPowerStatus', async (req, res) => {
+    const data = await getPowerStatus();
     if (data.status == 'success') {
         return res.json(data);
     }
