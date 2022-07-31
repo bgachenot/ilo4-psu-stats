@@ -1,5 +1,6 @@
 import { schedule } from "node-cron";
-import { refreshAuthenticationCookiesIfNeeded, getPowerReadings } from './index.js';
+import { getPowerReadings } from './routes/power.js';
+import { refreshAuthenticationCookiesIfNeeded } from './middlewares/authentication.js';
 
 export function initScheduledJobs() {
   const scheduledJobFunction = schedule("*/1 * * * *", () => {
@@ -13,6 +14,7 @@ export function initScheduledJobs() {
                     console.log(`Average power reading: ${average_power_reading}`);
                     console.log(`Maximum power reading: ${maximum_power_reading}`);
                     console.log(`Minimum power reading: ${minimum_power_reading}`);
+                    console.log(`Power supplies redundant: ${power_supplies_redundant}`);
                 } else {
                     console.log('Error getting power readings');
                 }
