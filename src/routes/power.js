@@ -56,6 +56,38 @@ export async function getPowerStatus() {
     return {status: 'success', data: data};        
 }
 
+export async function getPowerSummary() {
+    const headers = {
+        cookie: cookies,
+    };
+    const options = {
+        agent,
+        headers,
+    }
+    const response = await fetch(`https://${process.env.ILO4_IP}/json/power_summary`, options);
+    if (response.status != 200) {
+        return {status: 'failed'};
+    }
+    const data = await response.json();
+    return {status: 'success', data: data};        
+}
+
+export async function getPowerCapabilities() {
+    const headers = {
+        cookie: cookies,
+    };
+    const options = {
+        agent,
+        headers,
+    }
+    const response = await fetch(`https://${process.env.ILO4_IP}/json/power_capabilities`, options);
+    if (response.status != 200) {
+        return {status: 'failed'};
+    }
+    const data = await response.json();
+    return {status: 'success', data: data};        
+}
+
 router.get('/getPowerReadings', async (req, res) => {
     const data = await getPowerReadings();
     if (data.status == 'success') {
@@ -72,9 +104,24 @@ router.get('/pressPowerButton', async (req, res) => {
     return res.json(data);
 });
 
-
 router.get('/getPowerStatus', async (req, res) => {
     const data = await getPowerStatus();
+    if (data.status == 'success') {
+        return res.json(data);
+    }
+    return res.json(data);
+});
+
+router.get('/getPowerSummary', async (req, res) => {
+    const data = await getPowerSummary();
+    if (data.status == 'success') {
+        return res.json(data);
+    }
+    return res.json(data);
+});
+
+router.get('/getPowerCapabilities', async (req, res) => {
+    const data = await getPowerCapabilities();
     if (data.status == 'success') {
         return res.json(data);
     }
